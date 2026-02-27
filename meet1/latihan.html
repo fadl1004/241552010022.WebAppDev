@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- dibawah ini adalah judul dari yg terbesar ke terkecil dan garis pemisah --> 
+    <h1>Heading 1</h1>
+    <hr>
+    <h2>Heading 2</h2>
+    <hr>
+    <h3>Heading 3</h3>
+    <hr>
+    <h4>Heading 4</h4>
+    <hr>
+    <h5>Heading 5</h5>
+    <hr>
+    <h6>Heading 6</h6>
+    <hr>
+
+    <!-- dibawah ini adalah paragraf dan pindah baris -->
+    <p><b>Jika kamu tidak sanggup menahan lelahnya belajar</b>, <i>maka kamu harus sanggup menahan perihnya kebodohan</i><br><u>~Imam Syafi'i~</u></p>
+    
+    <!-- kutipan blok -->
+    <blockquote>
+        Ilmu menuntut kerendahan hati (tawadhu') dan ketekunan, ibarat air yang hanya mengalir ke tempat rendah, serta memperingatkan bahwa kebodohan berasal dari kesombongan. <footer> ~Imam Nawawi~</footer>
+    </blockquote>
+    
+    <!-- kutipan inline -->
+     <p> Imam Malik bin Anas berkata
+        <q>Ilmu itu adalah cahaya yang diletakkan Allah di dalam hati, dan ia tidak didapatkan dengan banyaknya riwayat</q>
+     </p>
+
+     <!-- sitasi -->
+      <cite>Hilyatul Auliya' wa Thabaqat al-Ashfiya' karya Abu Nu'aim al-Ashfahani (Jilid 6, halaman 348)</cite>
+
+
+    <!-- container: div dan span -->
+    <div>
+        <h2><mark>Tentang Saya</mark></h2>
+        <p><del>Halo, saya developer</del></p>
+    </div>
+
+    <div>
+        <h2><small>Keahlian</small></h2>
+        <p>HTML, CSS, JavaScript</p>
+    </div>
+
+    <p> Warna <sub>favorit</sub> saya adalah <span>biru</span> dan <sup>saya</sup> suka <span>coding</span>.</p>
+
+    <!-- list -->
+    <ul>
+        <li>item 1</li>
+        <li>item 2</li>
+        <li>item 3</li>
+        <li>item 4</li>
+    </ul>
+
+    <ol type="1">
+        <li>item 1</li>
+        <li>item 1</li>
+        <li>item 1</li>
+        <li>item 1</li>
+    </ol>
+
+    <ol type="A">
+        <li>item 1</li>
+        <li>item 1</li>
+        <li>item 1</li>
+        <li>item 1</li>
+    </ol>
+
+    
+    <ol type="a">
+        <li>item 1</li>
+        <li>item 1</li>
+        <li>item 1</li>
+        <li>item 1</li>
+    </ol>
+
+    
+    <ol type="i">
+        <li>item 1</li>
+        <li>item 1</li>
+        <li>item 1</li>
+        <li>item 1</li>
+    </ol>
+
+    
+    <ol start="5">
+        <li>item 1</li>
+        <li>item 1</li>
+        <li>item 1</li>
+        <li>item 1</li>
+    </ol>
+
+    <dl>
+        <dt>HTML</dt>
+        <dd>Bahasa Markup</dt>
+        <dt>CSS</dt>
+        <dd>Bahasa Styling</dt>
+    </dl>
+
+    <ul>
+        <li>Buah-buahan
+            <ul>
+                <li>Apel</li>
+                <li>Pisang</li>
+            </ul>
+        </li>
+        <li>Sayuran
+            <ul>
+                <li>Wortel</li>
+                <li>Brokoli</li>
+            </ul>
+        </li>
+    </ul>
+
+    <!-- link, gambar dan media -->
+     <a href="https://google.com">Google</a>
+     <hr>
+     <a href="latihan.html">latihan</a>
+     <hr>
+     <a href="#about">Ke bagian about</a>
+     <hr>
+     <a href="#">Kembali ke atas</a>
+     <hr>
+     <a href="mailto:fadil903ah@gmail.com">Email</a>
+     <hr>
+     <a href="tel:+6281936628730">Telepon</a>
+     <hr>
+     <a href="https://google.com" target="_blank">Google</a>
+     <hr>
+     <a href="https://external.com" target="_blank" rel="noopener noreferrer">Link eksternal aman</a>
+     <hr>
+     <a href="latihan.html" title="Pelajari tentang kami">Tentang</a>
+     <hr>
+     
+     <!--
+     dibawah ini code html untuk menampilkan gambar. rumusnya:
+     <img src="sumber" alt="deskripsi" />
+     ket: src=source/sumber, alt= teks alternatif.
+     -->
+     <img src="tazkia.webp" alt="foto tazkia" />
+     <hr>
+     <img src="https://asset.tribunnews.com/ppHxPBf_afoMO9aOmxFa7Ewa0k4=/1200x675/filters:upscale():quality(30):format(webp):focal(0.5x0.5:0.5x0.5)/bogor/foto/bank/originals/tazkia.jpg" alt="foto tazkia" />
+     <hr>  
+     <img src="tazkia.webp" alt="foto tazkia" width="300" height="200" />
+     <img src="tazkia.webp" alt="foto tazkia" loading="lazy" />
+     <hr>
+     <figure>
+        <img src="tazkia.webp" alt="gambar kampus tazkia sentul" />
+        <figcaption>
+            gambar terkini kampus tazkia sentul, 2026
+        </figcaption>
+     </figure>
+     <hr>
+
+     <!--
+     dibawah ini adalah code html seputar video, audio dan embedding (seperti youtube)
+     -->
+     <video controls width="640" height="360">
+        <source src="Tempat Kamu Di Neraka - Salman Al Utaybi - Ngatm0 (480p, h264).mp4" type="video/mp4"  />
+        <source src="vid.webm" type="video/webm" />
+        Tidak didukung
+     </video>
+     <hr>
+
+     <audio controls>
+        <source src="Tempat Kamu Di Neraka - Salman Al Utaybi - Ngatm0.mp3" type="audio/mpeg" />
+        <source src="lagu.ogg" type="audio/ogg" />
+        Tidak didukung
+    </audio>
+    <hr>
+
+    <iframe 
+    width="560" height="315" src="https://www.youtube.com/embed/DEtYsLNCuMM?si=JgnVijtbkzhCwcP7">
+    </iframe>
+
+
+
+
+
+</body>
+</html>
