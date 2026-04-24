@@ -1,0 +1,26 @@
+.hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #063970, #3a86ff);
+}
+.hero-content {
+    text-align: center;
+}
+h1 {
+    font-size: 3.5rem; font-weight: 800;
+    line-height: 1.1; letter-spacing: -1px;
+    color: white;
+}
+.btn-group {
+    display: flex; gap: 16px;
+    justify-content: center; margin-top: 32px;
+}
+.btn-primary {
+    background: #ffd660; color: #1a1a2e;
+    padding: 14px 28px; font-weight: 700;
+}
+.btn-ghost {
+    color: #1a1a2e;
+    padding: 14px 28px; font-weight: 700;
+}

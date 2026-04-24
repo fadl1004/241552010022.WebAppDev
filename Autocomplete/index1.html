@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamus Indonesia - Advanced Data Engineering Demo</title>
+    <link rel="stylesheet" href="style1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="main-container">
+    <header class="hero">
+        <div class="hero-badge">⚡ Data Engineering Demo</div>
+        <h1>📖 Kamus Indonesia</h1>
+        <p class="hero-desc">Perbandingan algoritma pencarian: <span class="tag brute">Brute Force O(n)</span> vs <span class="tag trie">Trie Indexing O(m)</span></p>
+        
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+            </svg>
+            <input type="text" id="inputText" placeholder="Ketik huruf untuk mencari... (contoh: ber, men, pe...)">
+            <div class="input-stats" id="inputStats"></div>
+        </div>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-value" id="totalWords">0</span>
+            <span class="stat-label">Total Kata</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value" id="totalNodes">0</span>
+            <span class="stat-label">Trie Nodes</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value" id="memorySize">0</span>
+            <span class="stat-label">Memory (KB)</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value" id="searchCount">0</span>
+            <span class="stat-label">Pencarian</span>
+        </div>
+    </div>
+
+    <div class="comparison-container">
+        <!-- LEFT: Brute Force -->
+        <div class="method-card slow-card">
+            <div class="card-header">
+                <div class="method-icon">🐢</div>
+                <div class="method-info">
+                    <h2>Brute Force</h2>
+                    <span class="complexity">O(n × m)</span>
+                </div>
+                <div class="status-badge" id="status1">Idle</div>
+            </div>
+            
+            <div class="visualization" id="viz1">
+                <div class="scan-line" id="scanLine1"></div>
+                <div class="word-list" id="wordList1"></div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress1"></div>
+            </div>
+            
+            <div class="results-area">
+                <div class="loader-container" id="loader1">
+                    <div class="loader-ring"></div>
+                    <span>Mencari...</span>
+                </div>
+                <div class="result-tags" id="result1"></div>
+            </div>
+            
+            <div class="performance-metrics">
+                <div class="metric">
+                    <span class="metric-label">Waktu</span>
+                    <span class="metric-value" id="time1">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Perbandingan</span>
+                    <span class="metric-value" id="comparisons1">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Hasil</span>
+                    <span class="metric-value" id="count1">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CENTER: VS -->
+        <div class="vs-divider">
+            <div class="vs-circle">VS</div>
+            <div class="speed-arrow" id="speedArrow">→</div>
+            <div class="speedup-text" id="speedupText"></div>
+        </div>
+
+        <!-- RIGHT: Trie -->
+        <div class="method-card fast-card">
+            <div class="card-header">
+                <div class="method-icon">🚀</div>
+                <div class="method-info">
+                    <h2>Trie Indexing</h2>
+                    <span class="complexity">O(m)</span>
+                </div>
+                <div class="status-badge active" id="status2">Ready</div>
+            </div>
+            
+            <div class="visualization" id="viz2">
+                <div class="trie-preview" id="triePreview"></div>
+            </div>
+            
+            <div class="results-area">
+                <div class="result-tags" id="result2"></div>
+            </div>
+            
+            <div class="performance-metrics">
+                <div class="metric">
+                    <span class="metric-label">Waktu</span>
+                    <span class="metric-value highlight" id="time2">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Node Dikunjungi</span>
+                    <span class="metric-value" id="nodesVisited">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Hasil</span>
+                    <span class="metric-value" id="count2">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="algorithm-explanation">
+        <h3>🔍 Bagaimana Cara Kerjanya?</h3>
+        <div class="explanation-grid">
+            <div class="explanation-card">
+                <h4>Brute Force</h4>
+                <p>Mengecek setiap kata dalam array satu per satu menggunakan <code>startsWith()</code>. Semakin banyak data, semakin lambat.</p>
+                <div class="code-snippet">
+                    <pre>for (let word of words) {
+  if (word.startsWith(input))
+    results.push(word);
+}</pre>
+                </div>
+            </div>
+            <div class="explanation-card">
+                <h4>Trie (Prefix Tree)</h4>
+                <p>Struktur tree di mana setiap node merepresentasikan satu huruf. Pencarian hanya mengikuti path huruf demi huruf.</p>
+                <div class="code-snippet">
+                    <pre>node = root;
+for (let char of input) {
+  node = node.children[char];
+}
+return node.words;</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Built with ❤️ untuk belajar Data Engineering | Dataset: KBBI Indonesia</p>
+    </footer>
+</div>
+
+<script>
+// ============================================
+// DATASET: 1000+ kata Bahasa Indonesia
+// ============================================
+const words = [
+    // A
+    "a","aba","abad","abadi","abang","abdi","abi","abjad","abnormal","aborsi",
+    "absah","absen","absensi","absolut","abstrak","absurd","abtar","acak","acap","acara",
+    "acau","aci","acuh","acum","adab","adakalanya","adalah","adam","adang","adaptasi",
+    "adar","adas","adegan","adem","adik","adil","administrasi","adonan","adopsi","adpis",
+    "adu","aduh","aduk","advokat","aerobik","afdal","afiat","afiks","afirmasi","agak",
+    "agam","agama","agan","agen","agenda","agitasi","agregat","agresif","agung","ahad",
+    "ahli","ahmad","air","ais","aja","ajak","ajar","ajek","ajeng","aji",
+    "ajudan","akad","akademi","akademik","akal","akan","akang","akar","akbar","akhir",
+    "akhlak","aki","akibat","akidah","akik","akil","akrab","akreditasi","aksa","aksi",
+    "aksen","akses","aksesori","akta","aktif","aktivis","aktivitas","aktor","aktris","aktuaria",
+    "akua","akuarium","akud","akumulasi","akuntan","akur","akurat","akustik","akut","alah",
+    "alai","alak","alam","alamat","alami","alang","alarm","alas","alat","alban",
+    "albas","alergi","alfa","alfabet","alga","alhamdulillah","aliansi","alias","alih","alim",
+    "alir","alis","alkitab","alkohol","allah","almari","almarhum","alokasi","alpa","alpu",
+    "altar","alternatif","altruisme","alum","alumni","alun","alur","amah","amal","aman",
+    "amanah","amandel","amar","amat","amatir","ambang","ambigu","ambil","ambisi","ambivalen",
+    "amblas","ambles","ambrol","ambruk","ambulans","ambruk","amin","amir","amis","amnesia",
+    "amoi","ampai","ampas","ampek","ampelas","ampere","ampuh","ampun","amputasi","amuk",
+    "anai","anak","analisis","analog","anarki","anasir","ancam","ancol","anda","andai",
+    "andak","andalan","andam","andan","andang","andong","aneh","aneka","aneksasi","anemia",
+    "angel","angga","anggar","anggun","angin","angka","angkara","angkat","angker","angkring",
+    "angkuh","angkut","angsa","ani","aniaya","animasi","animo","anjak","anjing","anjur",
+    "antagonis","antar","antek","antena","antep","anti","antik","antologi","antre","antropologi",
+    "anu","anugerah","anus","anyam","anyar","anyir","aorta","apa","apabila","apakah",
+    "apalagi","aparat","aparatur","apartemen","apati","apel","apendiks","apik","aplikasi","apotek",
+    "apresiasi","april","apung","arah","arak","aram","arang","aras","arca","ardi",
+    "area","arek","aren","areng","ares","argumen","aria","arif","aris","arisan",
+    "arit","aritmatika","arja","arkais","arkeologi","arkitek","armada","aroma","arsenal","arsip",
+    "arsitektur","arta","arteri","artesis","arti","artifisial","artikel","artikulasi","artileri","artis",
+    "arus","arwah","as","asa","asak","asal","asam","asap","asar","asas",
+    "asesor","aset","asfar","asih","asing","asisten","asli","asma","asmara","asoi",
+    "asong","asosiasi","aspek","aspirasi","asri","asta","astaga","astral","astronomi","asuh",
+    "asumsi","asuransi","asyik","atau","ateis","atensi","atlas","atlet","atmosfer","atom",
+    "atribut","atur","atus","audiensi","audio","audit","auksi","aula","auman","auns",
+    "aura","aus","autentik","auto","autopsi","aval","avtur","awa","awabakal","awal",
+    "awan","awas","awet","awur","ayah","ayak","ayal","ayam","ayang","ayat",
+    "ayem","ayo","ayu","azab","azali","azam","azimat","aziz",
+    
+    // B
+    "ba","baba","babal","babat","babi","baca","bacem","bacok","badai","badak",
+    "badal","badan","badar","badik","badut","baga","bagai","bagan","bagas","bagasi",
+    "bagi","baginda","bagong","bagus","bah","bahadur","bahagia","bahak","baham","bahana",
+    "bahari","bahasa","bahaya","bahkan","bahu","bahwa","bai","baik","bait","baja",
+    "bajaj","bajak","bajang","bajar","bajigur","bajingan","baju","bak","baka","bakal",
+    "bakar","bakat","bakda","bakdul","baki","bakir","bako","bakon","baksil","baku",
+    "bakul","bakung","bal","bala","balad","balai","balak","balam","balap","balar",
+    "balas","bale","bali","balig","baling","balita","balkon","balok","balon","balut",
+    "bambang","bambu","ban","bana","banal","banat","banci","banda","bandar","bandel",
+    "banding","bandit","bando","bandrol","bandung","bang","banga","bangai","bangat","bangau",
+    "bangga","bangkai","bangkit","bangku","bangsa","bangun","banguin","bani","banir","banjar",
+    "bank","bantah","bantai","bantal","bantar","bantu","bantut","banyak","banyol","bapak",
+    "baptis","bara","barak","barang","barat","barbar","barbel","barber","baris","baron",
+    "baru","barut","basah","basel","basil","basis","basmi","bastar","basuh","bata",
+    "batal","batalion","batang","batas","baterai","bati","batik","batil","batin","batis",
+    "batok","batu","batuk","bau","bauk","baur","baut","bawa","bawang","bawasir",
+    "bawel","bayam","bayang","bayar","bayi","bayu","be","beasiswa","bebal","beban",
+    "bebas","bebek","beber","beberapa","bebi","becak","becus","beda","bedah","bedak",
+    "bedil","beduk","begana","bege","begitulah","begitu","beha","bejat","bekal","bekam",
+    "bekas","beken","bekerja","bekicot","beku","bela","belacak","belah","belai","belajar",
+    "belakang","belalai","belan","belanda","belang","belanga","belanja","belantara","belas","belat",
+    "belati","belau","belepotan","beli","belia","beliau","beling","belit","belok","belom",
+    "belon","belong","belot","bels","belt","belu","beluk","belukar","belum","belus",
+    "benak","benam","benang","benar","bencana","benci","benda","bendahara","bendar","bendi",
+    "bendung","bengal","bengang","bengis","bengkak","bengkalai","bengkar","bengkel","bengkok","bengong",
+    "bengot","benih","benjol","bentak","bentang","bentar","benteng","bentrok","bentuk","benua",
+    "benum","benzene","bera","berai","berak","beranda","berang","berani","berantas","beras",
+    "berat","berau","bercak","berdikari","berdosa","berem","beres","beret","berewok","bergas",
+    "beri","beril","beringas","berita","berkah","berkas","berkelahi","berkilau","berlian","berminat",
+    "bernas","berok","beron","berondong","berontak","berot","bersih","bersin","berta","beruang",
+    "berujul","berus","bes","besar","besek","besengek","beser","beset","besi","besit",
+    "besok","bestari","bestek","betah","betapa","betas","betek","betina","betis","beton",
+    "betot","betul","bewok","biak","biang","biar","bias","biasa","biat","biawak",
+    "bibi","bibir","bibit","bida","bidah","bidan","bidang","bidas","bidik","bido",
+    "bijak","bijaksana","bijan","biji","bijih","bikin","bikir","bila","bilah","bilai",
+    "bilal","bilang","bilas","bilik","bilyet","bima","bimbang","bimbit","bina","binaraga",
+    "binasa","binatang","bincang","bindam","bingit","bingkai","bingung","bini","binjai","bintang",
+    "bintit","biola","biologis","biota","bipolar","bira","birah","biri","birik","biru",
+    "bis","bisa","bisik","biskuit","bismillah","bisu","bisul","bit","bius","bivak",
+    "biyung","blangko","blaster","blazer","bleber","blender","blok","blong","blus","boa",
+    "bobo","bobok","bobot","bocah","bocor","bodoh","bodor","bogem","bogor","bohong",
+    "boikot","bokar","bokong","bokser","bola","bolak","boleh","bolong","bolos","bolot",
+    "bom","bona","bonafide","bonceng","bondong","boneka","bongak","bonggo","bongkah","bongkar",
+    "bongkok","bongkol","bongmeh","bongmu","bongol","bonus","bonyok","bopong","bor","boraks",
+    "borci","bordir","borgol","borjuasi","borok","borong","boros","bos","bosa","bosan",
+    "bosor","botak","botol","boyong","bracket","brambang","brantas","bravo","brengsek","bres",
+    "brokoli","brondong","brontak","bruder","bu","bua","buah","buai","buak","bual",
+    "buana","buang","buani","buat","buaya","bubar","bubuh","bubuk","bubul","bubur",
+    "bubut","buci","budak","budi","budiman","budo","budu","budug","bugar","bugil",
+    "buhuk","buhul","bui","bujal","bujang","bujet","bujuk","bujur","buka","bukan",
+    "bukit","bukti","buku","bulak","bulan","bulang","bulat","bule","buleng","bulgur",
+    "bulir","bulu","bulug","buluk","bulus","bumi","bumpet","bun","buna","buncis",
+    "bundar","bundel","bung","bunga","bungkam","bungkuk","bungkus","bungsu","buni","buntak",
+    "buntal","buntang","buntat","buntet","bunting","buntu","buntung","buntut","bunuh","bunyi",
+    "bupati","bura","burai","burak","buram","buras","burem","burg","burik","burit",
+    "buron","buruh","buruk","burung","bus","busa","buset","busik","busuk","busung",
+    "busur","buta","butak","butek","butir","butuh","butul","butut","buyar","buyung",
+    "buyut",
+    
+    // C
+    "ca","cabai","cabang","cabik","cabir","cabul","cabut","cacad","cacar","cacat",
+    "caci","cadang","cadar","cadas","cadel","cadik","caduk","cagak","cagar","cai",
+    "caing","cak","caka","cakap","cakar","cakep","cakil","cakra","cakram","cakrawala",
+    "cakupan","calak","calang","caleg","calo","calon","camat","cambuk","cambung","camil",
+    "camping","campur","canai","canang","candak","candala","candu","cangak","cangga","canggih",
+    "cangkang","cangkir","cangkul","cangkung","cangkung","canteng","cantik","cantum","cap","capai",
+    "capak","capang","capek","caper","capil","cappela","captain","carak","cari","caring",
+    "caruk","cat","catat","catok","catu","catut","catur","cawat","cawe","cawis",
+    "cebol","cebong","cebur","cecak","cecer","cedera","ceding","cedok","cegah","cegat",
+    "ceker","cekik","ceking","cekit","cela","celah","celak","celaka","celana","celang",
+    "celapak","cele","celek","celempung","celeng","celengan","celetuk","celik","celing","celoteh",
+    "celup","celurit","cemar","cemas","cemburu","cemerlang","cemeti","cemik","cemooh","cempal",
+    "cempedak","cemplung","cempreng","cempuling","cenak","cenangah","cencang","cenceng","cendala","cendana",
+    "cendawan","cendekia","cengang","cengar","cengek","cengeng","cengger","cengis","cengki","cengkih",
+    "cengkok","cengli","cengung","centang","centil","centong","cepak","cepat","cepek","cepeng",
+    "ceper","cepirit","ceplas","ceplok","ceplos","cepuk","cerabut","ceracap","ceracau","cerai",
+    "cerakin","ceramah","cerana","cerang","cerat","cerau","cerca","cercaan","cere","cerek",
+    "ceret","cerewet","cergas","ceri","ceria","cerita","cermai","cermat","cermin","ceroboh",
+    "cerobong","cerocos","cerpen","cerucuk","ceruh","ceruk","cerun","cerutu","cetak","cetar",
+    "cetek","ceti","cetus","cewek","ciak","cibir","cicak","cici","cicip","cicir",
+    "cicit","cidera","cikal","cikar","cikok","cikun","cilacap","cilok","cina","cincai",
+    "cincang","cincin","cinta","cipta","ciput","cirang","cirit","citra","cium","ciut",
+    "coba","cobek","coblos","cocok","codet","cok","cokelat","coklat","colak","colek",
+    "colong","comberan","comblang","comel","comot","compeng","comot","congak","congek","congek",
+    "congor","contek","copet","copot","cor","corak","corek","coreng","corong","corot",
+    "cotok","cowok","coy","cuaca","cuak","cuar","cubit","cucak","cuci","cucu",
+    "cucuh","cucuk","cucur","cudang","cukai","cukil","cukim","cukup","cukur","cula",
+    "culas","culik","culun","cuma","cumbu","cumi","cunam","cungap","cungkil","cungur",
+    "cupak","cupang","cupet","cupu","curah","curam","curang","curat","curi","curiga",
+    "curna","curut","cus","cutak","cuti",
+    
+    // D
+    "daeng","daga","dagang","daging","dagu","dahaga","dahak","dahan","dahi","dahsyat",
+    "dahulu","daif","daim","dakap","daki","dakocan","dakron","daksa","dakwah","dakwa",
+    "dalal","dalam","dalang","daldal","dalem","dali","dalih","daling","dalu","damai",
+    "damak","damar","damba","damdaman","dami","damik","dampak","dampar","dan","dana",
+    "danau","dangai","dangdut","dangkal","dangkap","dangu","dani","dansa","danta","dara",
+    "darah","daram","daras","darat","dari","darma","darmaji","darmasiswa","darurat","darus",
+    "dasar","dasbor","dasi","data","datang","datif","datu","dauk","daulat","daun",
+    "daung","daya","dayuh","dayuk","dayung","debah","debap","debar","debat","debik",
+    "debit","debu","debuk","debum","debur","decak","decit","dedah","dedai","dedak",
+    "dedel","dedemit","dedengkot","dedit","degam","degar","degradasi","deguk","degup","deham",
+    "dehem","dehidrasi","deing","dejang","dejur","dekade","dekak","dekan","dekap","dekat",
+    "dekil","deklarasi","dekorasi","dekret","deksel","deku","delah","delapan","delegasi","delepak",
+    "delik","deling","delirium","delta","delusi","demagog","demam","demang","demek","demon",
+    "demonstrasi","dempak","dempet","dempul","dempung","denai","denak","dendam","dendang","dengar",
+    "dengki","dengkul","dengkur","dengung","dengus","denok","denotasi","densitas","dentam","dentang",
+    "denting","dentum","dentung","denyut","deodoran","depa","depang","departemen","departer","depedensi",
+    "depersonalisasi","depo","deponir","depot","depravasi","depresi","depresiasi","deputi","dera","derai",
+    "derajat","derak","deram","derang","derap","deras","derau","dere","deres","deret",
+    "derik","dering","derita","derma","dermaga","dermawan","dermit","deru","desa","desah",
+    "desain","desak","deselerasi","desember","desersi","desih","desik","desimal","desing","desir",
+    "desis","deskripsi","despot","destar","destinasi","detak","detasemen","detasering","deteksi","detektif",
+    "detik","detil","dewa","dewan","dewasa","dewi","di","dia","diabetes","diadem",
+    "diagnosis","diagonal","dial","dialog","diam","dian","diang","diare","diaspora","dibasa",
+    "didih","didis","diding","didis","difusi","digdaya","digital","dignitas","dikau","diksi",
+    "diktator","dikte","dilak","dilema","dimensi","dinamika","dinamis","dinamo","dinasti","dinda",
+    "dingin","dingkit","dini","dinosaurus","dioda","dioksida","dipan","diplomasi","dira","diras",
+    "direksi","direktori","dirgahayu","dirigen","disain","disertasi","disiplin","diskon","diskotek","diskresi",
+    "diskriminasi","diskusi","dislokasi","dismenore","disparitas","dispensasi","disposisi","distingsi","distorsi","distribusi",
+    "distrik","distraksi","disuasi","ditandai","diter","diversifikasi","diversitas","dividen","divisi","doa",
+    "dobel","doblak","dobol","dodol","dogel","dogma","dokar","dokoh","dokter","doktrin",
+    "dokumen","dolar","dolmen","domain","domba","domestik","dominan","domisili","dompet","donasi",
+    "dongak","dongeng","dongkel","dongkol","donor","dop","doping","dorong","dos","dosa",
+    "dosen","dosis","dota","doyan","drama","drastis","dril","dron","dualisme","dubur",
+    "duda","duduk","duga","duhai","duhul","duit","duka","duku","dukuh","duli",
+    "dulur","dum","dumai","dumeh","dumpak","dungu","dunia","dunting","duo","dupa",
+    "duplikat","dura","durasi","durhaka","duri","dus","dusun","duta","duwet"
+];
+
+// ============================================
+// TRIE DATA STRUCTURE
+// ============================================
+class TrieNode {
+    constructor() {
+        this.children = {};
+        this.words = [];
+        this.isEndOfWord = false;
+        this.count = 0;
+    }
+}
+
+class Trie {
+    constructor() {
+        this.root = new TrieNode();
+        this.nodeCount = 1;
+    }
+
+    insert(word) {
+        let node = this.root;
+        for (let char of word) {
+            if (!node.children[char]) {
+                node.children[char] = new TrieNode();
+                this.nodeCount++;
+            }
+            node = node.children[char];
+            if (!node.words.includes(word)) {
+                node.words.push(word);
+            }
+            node.count++;
+        }
+        node.isEndOfWord = true;
+    }
+
+    search(prefix) {
+        let node = this.root;
+        let nodesVisited = 0;
+        for (let char of prefix) {
+            nodesVisited++;
+            if (!node.children[char]) {
+                return { words: [], nodesVisited };
+            }
+            node = node.children[char];
+        }
+        return { words: node.words, nodesVisited };
+    }
+
+    getAllWords() {
+        const result = [];
+        this._dfs(this.root, '', result);
+        return result;
+    }
+
+    _dfs(node, prefix, result) {
+        if (node.isEndOfWord) {
+            result.push(prefix);
+        }
+        for (let char in node.children) {
+            this._dfs(node.children[char], prefix + char, result);
+        }
+    }
+}
+
+// ============================================
+// INITIALIZE
+// ============================================
+const trie = new Trie();
+let searchCount = 0;
+
+// Build Trie
+words.forEach(word => trie.insert(word));
+
+// Update stats
+document.getElementById('totalWords').textContent = words.length.toLocaleString();
+document.getElementById('totalNodes').textContent = trie.nodeCount.toLocaleString();
+
+// Estimate memory (rough calculation)
+const memoryEstimate = Math.round(
+    (JSON.stringify(words).length + JSON.stringify(trie).length) / 1024
+);
+document.getElementById('memorySize').textContent = memoryEstimate;
+
+// ============================================
+// VISUALIZATION
+// ============================================
+function renderBruteForceVisualization(input) {
+    const container = document.getElementById('wordList1');
+    const scanLine = document.getElementById('scanLine1');
+    
+    // Show a subset of words being scanned
+    const displayWords = words.slice(0, 50);
+    let html = '';
+    displayWords.forEach((word, i) => {
+        const isMatch = word.startsWith(input);
+        const delay = i * 0.02;
+        html += `<span class="viz-word ${isMatch ? 'match' : ''}" style="animation-delay: ${delay}s">${word}</span>`;
+    });
+    container.innerHTML = html;
+    
+    // Animate scan line
+    scanLine.style.animation = 'none';
+    scanLine.offsetHeight; // trigger reflow
+    scanLine.style.animation = 'scan 2s linear';
+}
+
+function renderTrieVisualization(input) {
+    const container = document.getElementById('triePreview');
+    if (!input) {
+        container.innerHTML = '<span class="trie-placeholder">Trie structure akan muncul di sini</span>';
+        return;
+    }
+    
+    let node = trie.root;
+    let path = [];
+    let valid = true;
+    
+    for (let char of input) {
+        if (node.children[char]) {
+            path.push({ char, count: node.children[char].count });
+            node = node.children[char];
+        } else {
+            valid = false;
+            break;
+        }
+    }
+    
+    let html = '<div class="trie-path">';
+    html += '<span class="trie-root">root</span>';
+    path.forEach((p, i) => {
+        html += `<span class="trie-arrow">→</span>`;
+        html += `<span class="trie-node ${i === path.length - 1 ? 'active' : ''}">${p.char}<small>${p.count}</small></span>`;
+    });
+    if (!valid) html += '<span class="trie-dead">✗</span>';
+    html += '</div>';
+    
+    container.innerHTML = html;
+}
+
+// ============================================
+// SEARCH FUNCTIONS
+// ============================================
+function bruteForceSearch(input) {
+    let result = [];
+    let comparisons = 0;
+    
+    for (let word of words) {
+        comparisons++;
+        if (word.startsWith(input)) {
+            result.push(word);
+        }
+    }
+    
+    return { result, comparisons };
+}
+
+function trieSearch(input) {
+    return trie.search(input);
+}
+
+// ============================================
+// RENDER RESULTS
+// ============================================
+function renderResults(id, data, prefix, maxItems = 15) {
+    const container = document.getElementById(id);
+    if (!data || data.length === 0) {
+        container.innerHTML = '<span class="no-result">🔍 Tidak ditemukan</span>';
+        return;
+    }
+    
+    let html = '';
+    data.slice(0, maxItems).forEach((word, i) => {
+        const highlighted = word.replace(
+            new RegExp(`^(${prefix})`), 
+            '<span class="highlight">$1</span>'
+        );
+        html += `<span class="result-tag" style="animation-delay: ${i * 0.03}s">${highlighted}</span>`;
+    });
+    
+    if (data.length > maxItems) {
+        html += `<span class="more-tag">+${data.length - maxItems} lainnya</span>`;
+    }
+    
+    container.innerHTML = html;
+}
+
+// ============================================
+// MAIN EVENT HANDLER
+// ============================================
+let searchTimeout;
+
+document.getElementById("inputText").addEventListener("input", function() {
+    const input = this.value.toLowerCase().trim();
+    
+    // Update input stats
+    document.getElementById('inputStats').textContent = input ? `${input.length} karakter` : '';
+    
+    if (!input) {
+        clearAll();
+        return;
+    }
+    
+    searchCount++;
+    document.getElementById('searchCount').textContent = searchCount;
+    
+    // Update statuses
+    document.getElementById('status1').textContent = 'Searching...';
+    document.getElementById('status1').className = 'status-badge searching';
+    document.getElementById('status2').textContent = 'Searching...';
+    document.getElementById('status2').className = 'status-badge searching';
+    
+    // Show loader for brute force
+    document.getElementById('loader1').style.display = 'flex';
+    document.getElementById('result1').innerHTML = '';
+    
+    // Clear previous timeout
+    clearTimeout(searchTimeout);
+    
+    // BRUTE FORCE (with artificial delay to show difference)
+    searchTimeout = setTimeout(() => {
+        const start1 = performance.now();
+        const { result: result1, comparisons } = bruteForceSearch(input);
+        const end1 = performance.now();
+        const time1 = end1 - start1;
+        
+        renderResults('result1', result1, input);
+        document.getElementById('time1').textContent = time1.toFixed(3) + ' ms';
+        document.getElementById('comparisons1').textContent = comparisons.toLocaleString();
+        document.getElementById('count1').textContent = result1.length;
+        document.getElementById('loader1').style.display = 'none';
+        document.getElementById('status1').textContent = 'Done';
+        document.getElementById('status1').className = 'status-badge';
+        
+        // Update progress bar
+        const progress1 = document.getElementById('progress1');
+        progress1.style.width = '100%';
+        setTimeout(() => progress1.style.width = '0%', 500);
+        
+        // Render visualization
+        renderBruteForceVisualization(input);
+        
+        // TRIE SEARCH (instant)
+        const start2 = performance.now();
+        const { words: result2, nodesVisited } = trieSearch(input);
+        const end2 = performance.now();
+        const time2 = end2 - start2;
+        
+        renderResults('result2', result2, input);
+        document.getElementById('time2').textContent = time2.toFixed(3) + ' ms';
+        document.getElementById('nodesVisited').textContent = nodesVisited;
+        document.getElementById('count2').textContent = result2.length;
+        document.getElementById('status2').textContent = 'Done';
+        document.getElementById('status2').className = 'status-badge active';
+        
+        // Render Trie visualization
+        renderTrieVisualization(input);
+        
+        // Calculate speedup
+        const speedup = time1 / time2;
+        const speedupText = document.getElementById('speedupText');
+        const speedArrow = document.getElementById('speedArrow');
+        
+        if (speedup > 1) {
+            speedupText.textContent = `${speedup.toFixed(1)}x lebih cepat`;
+            speedupText.style.color = '#2ecc71';
+            speedArrow.style.color = '#2ecc71';
+        } else {
+            speedupText.textContent = 'Sama cepat';
+            speedupText.style.color = '#f39c12';
+            speedArrow.style.color = '#f39c12';
+        }
+        
+    }, 400); // Artificial delay for brute force
+});
+
+function clearAll() {
+    document.getElementById('result1').innerHTML = '';
+    document.getElementById('result2').innerHTML = '';
+    document.getElementById('time1').textContent = '-';
+    document.getElementById('time2').textContent = '-';
+    document.getElementById('comparisons1').textContent = '-';
+    document.getElementById('nodesVisited').textContent = '-';
+    document.getElementById('count1').textContent = '-';
+    document.getElementById('count2').textContent = '-';
+    document.getElementById('speedupText').textContent = '';
+    document.getElementById('inputStats').textContent = '';
+    document.getElementById('status1').textContent = 'Idle';
+    document.getElementById('status1').className = 'status-badge';
+    document.getElementById('status2').textContent = 'Ready';
+    document.getElementById('status2').className = 'status-badge active';
+    document.getElementById('wordList1').innerHTML = '';
+    document.getElementById('triePreview').innerHTML = '<span class="trie-placeholder">Trie structure akan muncul di sini</span>';
+    document.getElementById('loader1').style.display = 'none';
+}
+
+// Initial state
+document.getElementById('triePreview').innerHTML = '<span class="trie-placeholder">Trie structure akan muncul di sini</span>';
+</script>
+
+</body>
+</html>
